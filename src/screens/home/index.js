@@ -61,21 +61,21 @@ export default class Home extends Component {
             return
         }
 
-        if (place != '' && place.indexOf(-1) != '') {
+        // if (place != '' && place.indexOf(-1) != '') {
 
-            const item = places.find(item => item == place)
-            if (item != undefined || item != '') {
-                Alert.alert(
-                    'Erro',
-                    `Já existe um registro com o nome: ${place} na lista. Tente novamente!`,
-                    [
-                        { text: 'OK' },
-                    ],
-                    { cancelable: false }
-                );
-                return
-            }
-        }
+        //     const item = places.find(item => item == place)
+        //     if (item != undefined || item != '') {
+        //         Alert.alert(
+        //             'Erro',
+        //             `Já existe um registro com o nome: ${place} na lista. Tente novamente!`,
+        //             [
+        //                 { text: 'OK' },
+        //             ],
+        //             { cancelable: false }
+        //         );
+        //         return
+        //     }
+        // }
 
         this.setState({
             places: [...places, place]
@@ -103,6 +103,13 @@ export default class Home extends Component {
 
         this.setState({
             places
+        })
+    }
+
+    cleanPlaces = () => {
+        this.setState({
+            places: [],
+            result: ''
         })
     }
 
@@ -142,9 +149,19 @@ export default class Home extends Component {
                 >
                     Sortear
                 </Button>
+
                 <View style={styles.viewResulText}>
                     <Text style={styles.resultText}>{result}</Text>
                 </View>
+
+                <Button 
+                    style={styles.buttonClean}
+                    icon="cancel" 
+                    mode="contained" 
+                    onPress={this.cleanPlaces}
+                > 
+                    Limpar
+                </Button>
             </View>
         </Container>
     );
@@ -167,6 +184,13 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         marginTop: 20,
         backgroundColor: '#4f9973'
+    },
+    buttonClean: {
+        fontSize: 20,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        marginTop: 20,
+        backgroundColor: '#ff0000'
     },
     input: {
         backgroundColor: '#fff'
