@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { StyleSheet, View, Text, Alert } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 
 import { Container } from "../../components";
+import { CardList } from "../../components";
 
 export default class Home extends Component {
 
@@ -11,26 +12,42 @@ export default class Home extends Component {
 
         this.state = {
             place: '',
+            result: '',
             places: []
         }
     }
 
-    _raffle = () => {
+    raffle = () => {
         const {places} = this.state
         const placeMinLength = 0
 
         let placeMaxLength = places.length
 
-        let placeIndex = Math.floor(Math.random() * (placeMaxLength - placeMinLength)) + placeMinLength
+        if (places.length >= 2) {
+            let placeIndex = Math.floor(Math.random() * (placeMaxLength - placeMinLength)) + placeMinLength
         
-        const place = places.filter((item, index) => {
-            return index == placeIndex
-        })
+            const place = places.filter((item, index) => {
+                return index == placeIndex
+            })
 
-        return place[0]
+            this.setState({result: place[0]})
+        } else {
+            Alert.alert(
+                'Erro',
+                'Não foi possível realizar a escolha. Tente novamente.',
+                [
+                    { text: 'OK' },
+                ],
+                { cancelable: false }
+            );
+            return
+        }
     }
 
-    checkFields = (place) => {
+    addPlace = () => {
+        const { place } = this.state
+        const { places } = this.state
+
         if (place == '' || place.indexOf(-1) == '') {
             Alert.alert(
                 'Erro',
@@ -43,20 +60,33 @@ export default class Home extends Component {
 
             return
         }
+
+        if (place != '' && place.indexOf(-1) != '') {
+
+            for (let i = 0; i < places.length; i++) {
+                const item = places[i];
+                if (item == place) {
+                    Alert.alert(
+                        'Erro',
+                        `Já existe um registro com o nome: ${place} na lista. Tente novamente!`,
+                        [
+                            { text: 'OK' },
+                        ],
+                        { cancelable: false }
+                    );
+                    return
+                }
+            }
+        }
+
+        this.setState({
+            places: [...places, place]
+        })
+
+        this.cleanFields()
     }
 
-    addPlace = () => {
-        const { place } = this.state
-
-        this.checkFields(place)
-        
-        this.state.places = [...this.state.places, place]
-        
-        this.eraseCurrentTypedPlace()
-        console.log(this.state.places)
-    }
-
-    eraseCurrentTypedPlace = () => {
+    cleanFields = () => {
         this.setState({place: ''})
     }
 
@@ -64,35 +94,42 @@ export default class Home extends Component {
         
     }
 
+    keyExtractor = index => index.toString();
+
   render() {
 
-    const places = this.state
+    let {places, result} = this.state
 
     return (
         <Container isScrollable={true}>
             <View style={styles.home}>
                 <TextInput
                     style={styles.input}
-                    label='Lugar'
+                    label='O que? Onde? Quem?'
                     value={this.state.place}
                     onChangeText={place => this.setState({ place })}
                 />
-                <Button icon="add-a-photo" mode="contained" onPress={this.addPlace}>
+                <Button 
+                    style={styles.buttonAdd}
+                    icon="add" 
+                    mode="contained" 
+                    onPress={this.addPlace}>
                     Adicionar
                 </Button>
 
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={this._raffle}
-                    activeOpacity={0.8}
-                >
-                    <Text style={styles.buttonText}> Sortear </Text>
-                </TouchableOpacity>
+                <CardList items={places}></CardList>
 
-                {/* <FlatList
-                    data={places}
-                    renderItem={({place}) => <Text key={place.key}>{place.key}</Text>}
-                    /> */}
+                <Button 
+                    style={styles.buttonRaffle}
+                    icon="casino" 
+                    mode="contained" 
+                    onPress={this.raffle}
+                >
+                    Sortear
+                </Button>
+                <View style={styles.viewResulText}>
+                    <Text style={styles.resultText}>{result}</Text>
+                </View>
             </View>
         </Container>
     );
@@ -104,10 +141,27 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center'
     },
-    button: {
+    buttonAdd: {
+        fontSize: 20,
+        marginTop: 4,
         color: '#3A5EE3'
     },
-    buttonText: {
-        color: '#D4D9EB'
+    buttonRaffle: {
+        fontSize: 20,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        marginTop: 20,
+        backgroundColor: '#4f9973'
+    },
+    input: {
+        backgroundColor: '#fff'
+    },
+    resultText: {
+        fontSize: 20
+    },
+    viewResulText: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })
