@@ -63,19 +63,17 @@ export default class Home extends Component {
 
         if (place != '' && place.indexOf(-1) != '') {
 
-            for (let i = 0; i < places.length; i++) {
-                const item = places[i];
-                if (item == place) {
-                    Alert.alert(
-                        'Erro',
-                        `Já existe um registro com o nome: ${place} na lista. Tente novamente!`,
-                        [
-                            { text: 'OK' },
-                        ],
-                        { cancelable: false }
-                    );
-                    return
-                }
+            const item = places.find(item => item == place)
+            if (item != undefined || item != '') {
+                Alert.alert(
+                    'Erro',
+                    `Já existe um registro com o nome: ${place} na lista. Tente novamente!`,
+                    [
+                        { text: 'OK' },
+                    ],
+                    { cancelable: false }
+                );
+                return
             }
         }
 
@@ -87,18 +85,35 @@ export default class Home extends Component {
     }
 
     cleanFields = () => {
-        this.setState({place: ''})
+        this.setState({
+            place: ''
+        })
     }
 
-    removePlace = () => {
-        
+    removePlace = (elementIndex) => {
+        //TODO: test if it is working properly.
+        let places = [
+            ...state.filter((item, index) => {
+                if (index === elementIndex) {
+                    return false
+                }
+                return true
+            })
+        ]
+
+        this.setState({
+            places
+        })
     }
 
     keyExtractor = index => index.toString();
 
   render() {
 
-    let {places, result} = this.state
+    let {
+        places, 
+        result
+    } = this.state
 
     return (
         <Container isScrollable={true}>
