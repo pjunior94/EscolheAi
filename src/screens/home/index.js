@@ -113,6 +113,13 @@ export default class Home extends Component {
         })
     }
 
+    cleanPlaces = () => {
+        this.setState({
+            places: [],
+            result: ''
+        })
+    }
+
     keyExtractor = index => index.toString();
 
   render() {
@@ -153,19 +160,18 @@ export default class Home extends Component {
                 >
                     Sortear
                 </Button>
-                
-                <Button 
-                    style={styles.buttonClean}
-                    icon="remove-circle" 
-                    mode="contained" 
-                    color="#FF0000"
-                    onPress={this.cleanList}
-                >
-                    Limpar
-                </Button>
                 <View style={styles.viewResulText}>
                     <Text style={styles.resultText}>{result}</Text>
                 </View>
+
+                <Button 
+                    style={styles.buttonClean}
+                    icon="cancel" 
+                    mode="contained" 
+                    onPress={this.cleanPlaces}
+                > 
+                    Limpar
+                </Button>
             </View>
         </Container>
     );
@@ -194,7 +200,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-end',
         marginTop: 20,
-        backgroundColor: '#FF0000'
+        backgroundColor: '#ff0000'
     },
     input: {
         backgroundColor: '#fff'
