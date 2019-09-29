@@ -45,8 +45,10 @@ export default class Home extends Component {
     }
 
     addPlace = () => {
-        const { place } = this.state
-        const { places } = this.state
+        const { 
+            place, 
+            places 
+        } = this.state
 
         if (place == '' || place.indexOf(-1) == '') {
             Alert.alert(
@@ -57,25 +59,24 @@ export default class Home extends Component {
                 ],
                 { cancelable: false }
             );
-
             return
         }
 
-        if (place != '' && place.indexOf(-1) != '') {
+        // if (place != '' && place.indexOf(-1) != '') {
 
-            const item = places.find(item => item == place)
-            if (item != undefined || item != '') {
-                Alert.alert(
-                    'Erro',
-                    `Já existe um registro com o nome: ${place} na lista. Tente novamente!`,
-                    [
-                        { text: 'OK' },
-                    ],
-                    { cancelable: false }
-                );
-                return
-            }
-        }
+        //     const item = places.find(item => item == place)
+        //     if (item != undefined || item != '') {
+        //         Alert.alert(
+        //             'Erro',
+        //             `Já existe um registro com o nome: ${place} na lista. Tente novamente!`,
+        //             [
+        //                 { text: 'OK' },
+        //             ],
+        //             { cancelable: false }
+        //         );
+        //         return
+        //     }
+        // }
 
         this.setState({
             places: [...places, place]
@@ -87,6 +88,12 @@ export default class Home extends Component {
     cleanFields = () => {
         this.setState({
             place: ''
+        })
+    }
+
+    cleanList = () => {
+        this.setState({
+            places: []
         })
     }
 
@@ -122,7 +129,11 @@ export default class Home extends Component {
                     style={styles.input}
                     label='O que? Onde? Quem?'
                     value={this.state.place}
-                    onChangeText={place => this.setState({ place })}
+                    onChangeText={
+                        place => this.setState({ 
+                            place 
+                        })
+                    }
                 />
                 <Button 
                     style={styles.buttonAdd}
@@ -141,6 +152,16 @@ export default class Home extends Component {
                     onPress={this.raffle}
                 >
                     Sortear
+                </Button>
+                
+                <Button 
+                    style={styles.buttonClean}
+                    icon="remove-circle" 
+                    mode="contained" 
+                    color="#FF0000"
+                    onPress={this.cleanList}
+                >
+                    Limpar
                 </Button>
                 <View style={styles.viewResulText}>
                     <Text style={styles.resultText}>{result}</Text>
@@ -167,6 +188,13 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         marginTop: 20,
         backgroundColor: '#4f9973'
+    },
+    buttonClean: {
+        fontSize: 20,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        marginTop: 20,
+        backgroundColor: '#FF0000'
     },
     input: {
         backgroundColor: '#fff'
